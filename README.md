@@ -1,4 +1,4 @@
-# Arkosia OS 
+# ArkosiaOS 
 A hobby operating system written in x86 Assembly
 
 ## Features
@@ -10,7 +10,10 @@ A hobby operating system written in x86 Assembly
 - Protected mode (planned)
 
 ## Project Structure
-/boot
+```
+/boot 
+
+```
 
 ## Goals
 - [x] BIOS Boot
