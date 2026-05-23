@@ -1,0 +1,1 @@
+Start-Process bochs.exe -ArgumentList "-debugger -f .\bochsrc.txt"

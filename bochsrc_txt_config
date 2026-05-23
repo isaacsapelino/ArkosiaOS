@@ -1,0 +1,19 @@
+megs: 64
+
+romimage: file=BIOS-bochs-latest
+vgaromimage: file=VGABIOS-lgpl-latest.bin
+
+floppya: 1_44=arkosia.img, status=inserted
+
+boot: floppy
+
+log: bochslog.txt
+
+display_library: win32, options="gui_debug"
+
+sound: enabled=0
+sb16: enabled=0
+
+panic: action=ask
+error: action=report
+info: action=report
