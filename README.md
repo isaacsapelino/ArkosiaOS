@@ -14,7 +14,6 @@ A hobby operating system written in x86 Assembly
 /boot       - Bootloader (BIOS, diskreading)
 /kernel     - Kernel (planned)
 /fs         - FAT12 filesystem integration (planned)
-
 ```
 
 ## Build & Run
@@ -25,15 +24,18 @@ A hobby operating system written in x86 Assembly
 - Git (optional)
 
 ### Build executable
-```make all
+```
+make all
 ```
 
 ### Run in QEMU
-```make qemu
+```
+make qemu
 ```
 
 ### Run in Bochs (Powershell/Windows)
-```.\Debug.ps1
+```
+.\Debug.ps1
 ```
 
 ---
