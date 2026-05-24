@@ -10,7 +10,7 @@ nop
 ;== FAT 12 BIOS Parameter Block ==;
 oemName:            db 'ARKOSIA1'
 bytesPerSector:     dw 512
-sectorsPerCLuster:  db 1
+sectorsPerCluster:  db 1
 reversedSectors:    dw 1
 numberOfFATs:       db 2
 rootEntries:        dw 224
@@ -30,6 +30,11 @@ volumeID:           dd 0x20261605
 volumeLabel:        db "ARKOSIA  OS"
 fileSystemType:     db "FAT12   "
 
+ROOT_DIR_SECTORS   equ 14
+FAT_SECTORS        equ 9
+RESERVED_SECTORS   equ 1
+FIRST_DATA_SECTOR  equ 33
+
 start:
     cli
     xor ax, ax
@@ -40,80 +45,24 @@ start:
     mov si, 0h
     sti
 
-    mov si, msg_hello
-    call print
-
-    mov ax, 1
-    mov bx, 0x1000
-    mov es, bx
-    mov bx, 0x0000
-    call readDisk
-    xchg bx, bx     ; Bochs Debugging
-
-hang:
-    hlt
-
-
 ; LBA to CHS 
 ; For INT 13H Reference
 ; Sector = CL, Cylinder = CH, Head = DH
 ; DIV = DX:AX
 
-
-lba_to_chs:
-    push ax
-    push dx
-
+lbaToChs:
     xor dx, dx
     div word [sectorsPerTrack]
+
     inc dx
-    
-    push dx
+    mov cl, dl
 
     xor dx, dx
     div word [numbHeads]
 
-    mov ch, dl
-    pop dx
-    mov cl, dl
-    pop dx
-    mov dh, al
-    pop ax
+    mov ch, al
+    mov dh, dl
     ret
-
-readDisk:
-    push ax
-    push bx
-    push cx
-    push dx
-
-.retry:
-    call lba_to_chs
-    mov ah, 0x02
-    mov al, 0x01
-    mov dl, 0x00
-
-    int 0x13
-    jc .error
-
-.success:
-    pop ax
-    pop bx
-    pop cx
-    pop dx
-    mov si, diskSuccessMsg
-    call print
-    ret
-
-.error:
-    pop ax
-    pop bx
-    pop cx
-    pop dx
-    mov si, diskFailedMsg
-    call print
-    ret
-
 
 ; TTY Function
 print:
@@ -132,6 +81,7 @@ done:
 msg_hello: db 'Loading Arkosia OS v0.0.1', ENDL, NEWL, 0
 diskFailedMsg: db 'Cannot read disk!', ENDL, NEWL, 0
 diskSuccessMsg: db 'Disk read successful.', ENDL, NEWL, 0
-retry_count: db 3
+foundKernel: db 'Found Kernel', 0
+kernelFile: db 'KERNEL  BIN'
 times 510 - ($-$$) db 0
 dw 0xAA55
